@@ -11,12 +11,12 @@ information, and show it using matplotlib.
 
 import matplotlib.pyplot as plt
 import pydicom
-from pydicom.data import get_testdata_files
+#from pydicom.data import get_testdata_files
 
 print(__doc__)
 
 #filename = get_testdata_files('CT_small.dcm')[0]
-filename = 'MRI_Images/rodilla.dcm'
+filename = 'MRI_Images/MRI01.dcm'
 
 dataset = pydicom.dcmread(filename)
 
@@ -48,8 +48,8 @@ try:
 
     # use .get() if not sure the item exists, and want a default value if missing
     print("Slice location...:", dataset.get('SliceLocation', "(missing)"))
-    print("Smallest Image Pixel Value.....", dataset.SmallestImagePixelValue)
-    print("Largest Image Pixel Value.....", dataset.LargestImagePixelValue) 
+    #print("Smallest Image Pixel Value.....", dataset.SmallestImagePixelValue)
+    #print("Largest Image Pixel Value.....", dataset.LargestImagePixelValue) 
 
     #print (dataset)
     # plot the image using matplotlib
