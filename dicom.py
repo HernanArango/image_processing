@@ -58,6 +58,7 @@ def histogram(data):
     
 
 
+
 # Normal mode:
 try:
     print()
