@@ -3,11 +3,22 @@ import cv2
 import matplotlib.pyplot as plt
 
 # Load an color image in grayscale
-img = cv2.imread('imagen.png',0)
-
+img = cv2.imread('lena.jpg')
 
 
 def convolucion(imagen,matriz_convolucion):
+    
+    #rows = imagen.shape
+    i=0
+    matriz_convolucionada = []
+    print (matriz_convolucionada)
+    
+    for canales_imagen in imagen:
+        matriz_convolucionada.append(aux_convolucion(canales_imagen,matriz_convolucion))
+        i=i+1
+    return matriz_convolucionada[0] + matriz_convolucionada[1] + matriz_convolucionada[2]
+
+def aux_convolucion(imagen,matriz_convolucion):
     
    
     rows, cols = imagen.shape
@@ -40,27 +51,25 @@ def convolucion(imagen,matriz_convolucion):
     		# i+1, j-1 diagonal izquierda abajo 
     		o = imagen[i+1,j-1] * matriz_convolucion[2,0]
     		matriz_convolucionada[i,j] = a+b+c+d+e+f+g+h+i
-    		print (i,j)
-    		print(matriz_convolucionada[i,j])
-    		print (a+b+c+d+e+f+g+h+o)
+    		#print (i,j)
+    		#print(matriz_convolucionada[i,j])
+    		#print (a+b+c+d+e+f+g+h+o)
     		
-    	
-    	"""
-    	print(matriz_concolucionada[i,j])
-    	print (a+b+c+d+e+f+g+h+i)
-    	break
-    	"""
+ 
     print ("convolucionando en forma")
     return matriz_convolucionada
 
 matriz_convolucion = np.matrix("1, 2, 1; 2, 4, 2; 1, 2, 1")
 
+
 #print (np.size(img,1))
 #print (np.size(img,0))
 
 
-new_img = convolucion(img,matriz_convolucion)
-print ("a mostrar")
+#new_img = convolucion(img,matriz_convolucion)
+b,g,r = cv2.split(img)
+
+new_img = convolucion(cv2.split(img),matriz_convolucion)
 plt.imshow(new_img, cmap=plt.cm.bone)
 plt.show()
     
