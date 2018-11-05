@@ -16,7 +16,10 @@ def convolucion(imagen,matriz_convolucion):
     for canales_imagen in imagen:
         matriz_convolucionada.append(aux_convolucion(canales_imagen,matriz_convolucion))
         i=i+1
-    return matriz_convolucionada[0] + matriz_convolucionada[1] + matriz_convolucionada[2]
+    #print(len(matriz_convolucionada),i)
+    #print(matriz_convolucionada)
+    #return matriz_convolucionada[0] + matriz_convolucionada[1] + matriz_convolucionada[2]
+    return cv2.merge((matriz_convolucionada[0],matriz_convolucionada[1],matriz_convolucionada[2]))
 
 def aux_convolucion(imagen,matriz_convolucion):
     
@@ -50,7 +53,7 @@ def aux_convolucion(imagen,matriz_convolucion):
     		h = imagen[i+1,j+1] * matriz_convolucion[2,2]
     		# i+1, j-1 diagonal izquierda abajo 
     		o = imagen[i+1,j-1] * matriz_convolucion[2,0]
-    		matriz_convolucionada[i,j] = a+b+c+d+e+f+g+h+i
+    		matriz_convolucionada[i,j] = a+b+c+d+e+f+g+h+o
     		#print (i,j)
     		#print(matriz_convolucionada[i,j])
     		#print (a+b+c+d+e+f+g+h+o)
@@ -59,17 +62,46 @@ def aux_convolucion(imagen,matriz_convolucion):
     print ("convolucionando en forma")
     return matriz_convolucionada
 
-matriz_convolucion = np.matrix("1, 2, 1; 2, 4, 2; 1, 2, 1")
 
+def split_channels(img):
+    #new_img = convolucion(img,matriz_convolucion)
+    #b,g,r = cv2.split(img)
 
+    #Blue
+    b = img.copy()
+    b[:,:,1]=0
+    b[:,:,2]=0
+    #Green
+    g = img.copy()
+    g[:,:,0]=0
+    g[:,:,2]=0
+    #Red
+    r = img.copy()
+    r[:,:,0]=0
+    r[:,:,1]=0
+
+    return r,g,b
+
+#matriz_convolucion = np.matrix("1, 2, 1; 2, 4, 2; 1, 2, 1")
+#matriz_convolucion = np.matrix("0, 1, 0; 1, -4, 1; 0, 1, 0")
+#matriz_convolucion = np.ones((3,3),np.float32)/20
+
+#r,g,b = split_channels(img)
+b,g,r = cv2.split (img)
 #print (np.size(img,1))
 #print (np.size(img,0))
+"""
+cv2.imshow('Blue Channel',b)
+cv2.imshow('Green Channel',g)
+cv2.imshow('Red Channel',r)
+new_img=cv2.merge((b,g,r))
+"""
+new_img = convolucion([b,g,r],matriz_convolucion)
 
-
-#new_img = convolucion(img,matriz_convolucion)
-b,g,r = cv2.split(img)
-
-new_img = convolucion(cv2.split(img),matriz_convolucion)
-plt.imshow(new_img, cmap=plt.cm.bone)
+#new_img = aux_convolucion(img,matriz_convolucion)
+cv2.imwrite( "nueva.png", new_img );
+plt.imshow(new_img,cmap=plt.cm.bone)
 plt.show()
-    
+#cv2.imshow('image',img)
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
