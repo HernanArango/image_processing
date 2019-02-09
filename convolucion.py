@@ -82,26 +82,41 @@ def split_channels(img):
 
     return r,g,b
 
+def save_image(new_img):
+    cv2.imwrite( "nueva.png", new_img );
+    plt.imshow(new_img,cmap=plt.cm.bone)
+    plt.show()
+
+    #cv2.imshow('image',img)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
+
 #matriz_convolucion = np.matrix("1, 2, 1; 2, 4, 2; 1, 2, 1")
 #matriz_convolucion = np.matrix("0, 1, 0; 1, -4, 1; 0, 1, 0")
-#matriz_convolucion = np.ones((3,3),np.float32)/20
+
 
 #r,g,b = split_channels(img)
-b,g,r = cv2.split (img)
+
 #print (np.size(img,1))
 #print (np.size(img,0))
-"""
-cv2.imshow('Blue Channel',b)
-cv2.imshow('Green Channel',g)
-cv2.imshow('Red Channel',r)
-new_img=cv2.merge((b,g,r))
-"""
-new_img = convolucion([b,g,r],matriz_convolucion)
 
-#new_img = aux_convolucion(img,matriz_convolucion)
-cv2.imwrite( "nueva.png", new_img );
-plt.imshow(new_img,cmap=plt.cm.bone)
-plt.show()
-#cv2.imshow('image',img)
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()
+
+def convolution(img):
+    matriz_convolucion = np.ones((3,3),np.float32)/20
+    matriz_convolucion = np.matrix("0, 1, 0; 1, -4, 1; 0, 1, 0")
+    #b,g,r = cv2.split (img)
+    #new_img = convolucion([b,g,r],matriz_convolucion)
+    new_img = aux_convolucion(img,matriz_convolucion)
+
+    # plot the image using matplotlib
+    plt.subplot(121),plt.imshow(img,cmap=plt.cm.bone),plt.title('Original')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(122),plt.imshow(new_img,cmap=plt.cm.bone),plt.title('Convolucion')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
+
+    return new_img
+    #save_image(new_img)
+
+
+

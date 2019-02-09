@@ -16,6 +16,7 @@ import numpy as np
 #import pydicom.pixel_data_handlers.pillow_handler as pillow_handler
 from pydicom.data import get_testdata_files
 from heapq import merge
+import convolucion
 
 print(__doc__)
 
@@ -26,6 +27,9 @@ filename = 'MRI_Images/MRI01.dcm'
 #pydicom.config.image_handlers = [pillow_handler]
 dataset = pydicom.dcmread(filename)
 
+new_image = convolucion.convolution(dataset.pixel_array)
+dataset.PixelData = new_image.tobytes()
+dataset.save_as("newfilename.dcm")
  
 def histogram(data):
     print()
@@ -98,7 +102,11 @@ try:
     
     #data = dataset.pixel_array
     
-    histogram(dataset.pixel_array)
+    #histogram(dataset.pixel_array)
+
+    
+
+
     
 
 except ValueError:
