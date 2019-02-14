@@ -3,9 +3,9 @@ import cv2
 import matplotlib.pyplot as plt
 
 # Load an color image in grayscale
-img = cv2.imread('lena.jpg')
+#img = cv2.imread('lena.jpg')
 
-
+"""
 def convolucion(imagen,matriz_convolucion):
     
     #rows = imagen.shape
@@ -20,7 +20,7 @@ def convolucion(imagen,matriz_convolucion):
     #print(matriz_convolucionada)
     #return matriz_convolucionada[0] + matriz_convolucionada[1] + matriz_convolucionada[2]
     return cv2.merge((matriz_convolucionada[0],matriz_convolucionada[1],matriz_convolucionada[2]))
-
+"""
 def aux_convolucion(imagen,matriz_convolucion):
     
    
@@ -101,12 +101,12 @@ def save_image(new_img):
 #print (np.size(img,0))
 
 
-def convolution(img):
-    matriz_convolucion = np.ones((3,3),np.float32)/20
-    matriz_convolucion = np.matrix("0, 1, 0; 1, -4, 1; 0, 1, 0")
+def convolution(img,matrix_convolution):
+    #matriz_convolucion = np.ones((3,3),np.float32)/20
+    #matriz_convolucion = np.matrix("0, 1, 0; 1, -4, 1; 0, 1, 0")
     #b,g,r = cv2.split (img)
     #new_img = convolucion([b,g,r],matriz_convolucion)
-    new_img = aux_convolucion(img,matriz_convolucion)
+    new_img = aux_convolucion(img,matrix_convolution)
 
     # plot the image using matplotlib
     plt.subplot(121),plt.imshow(img,cmap=plt.cm.bone),plt.title('Original')

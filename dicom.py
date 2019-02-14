@@ -16,53 +16,30 @@ import numpy as np
 #import pydicom.pixel_data_handlers.pillow_handler as pillow_handler
 from pydicom.data import get_testdata_files
 from heapq import merge
+import cv2
 import convolucion
+from sobel import Sobel
 
-print(__doc__)
+#print(__doc__)
 
-#filename = get_testdata_files('CT_small.dcm')[0]
+
 filename = 'MRI_Images/MRI01.dcm'
-#filename = 'MRI_Images/MR000001'
 
-#pydicom.config.image_handlers = [pillow_handler]
+
+
+
 dataset = pydicom.dcmread(filename)
 
-new_image = convolucion.convolution(dataset.pixel_array)
-dataset.PixelData = new_image.tobytes()
-dataset.save_as("newfilename.dcm")
+matrix_convolution = np.matrix("0, 1, 0; 1, -4, 1; 0, 1, 0")
+#new_image = convolucion.convolution(dataset.pixel_array, matrix_convolution)
+Sobel(dataset.pixel_array)
+
+
+#----------GUARDAR DATOS----------
+#dataset.PixelData = new_image.tobytes()
+#dataset.save_as("newfilename.dcm")
+
  
-def histogram(data):
-    print()
-    print("Creating histogram please wait. (Paciencia)")
-    data = np.array(dataset.pixel_array)
-    min_pixel = np.ndarray.min(data)
-    max_pixel = np.ndarray.max(data)
-    print("Smallest Image Pixel Value.....",min_pixel)
-    print("Largest Image Pixel Value.....",max_pixel)
-    
-    
-    histY = [0]*65536
-    histX = [0]*65536
-
-    for i in range(0,len(data),1):
-        for j in range(0,len(data),1):
-            index = data[i][j]  
-            histY[index] = histY[index]+1
-
-    for i in range(0,len(histX),1):
-        histX[i] = i
-
-    plt.xlabel('Values')
-    plt.ylabel('Frecuency')
-    plt.title('Histogram')
-    plt.plot(histX,histY, 'k')
-    plt.grid(True)
-    plt.show()
-    
-    
-
-
-
 # Normal mode:
 try:
     print()
@@ -111,7 +88,6 @@ try:
 
 except ValueError:
     print("error: algun header no disponible",ValueError)
-
 
 
 
