@@ -10,9 +10,9 @@ class Kernel:
 		matrix_convolution2 = np.matrix("-1, -2, -1; 0, 0, 0; 1, 2, 1")
 		matrix1 = np.absolute(convolucion.convolution(img,matrix_convolution1))
 		matrix2 = np.absolute(convolucion.convolution(img,matrix_convolution2))
-
-		return matrix1 + matrix2
 		#para generar g suma de valores absolutos gx y gy
+		return matrix1 + matrix2
+		
 
 	def gauss(img):
 		matriz_convolucion = np.matrix("0, 1, 0; 1, -4, 1; 0, 1, 0")
