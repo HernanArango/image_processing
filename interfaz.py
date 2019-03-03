@@ -1,5 +1,6 @@
 from tkinter import *
 import pydicom
+import matplotlib.pyplot as plt
 from sobel import Kernel
 from thresholding import Thresholding
 import cv2
@@ -7,31 +8,40 @@ import cv2
 class Interfaz:
 	
 	filename = 'MRI_Images/MRI01.dcm'
+	
 
 	def sobel(self):
 		print ("ALGORTIMO SOBEL")
 		dataset = pydicom.dcmread(self.filename)
-		Kernel.sobel(dataset.pixel_array)
+		new_image = Kernel.sobel(dataset.pixel_array)
+		self.show(dataset.pixel_array,new_image)
 
 	def gauss(self):
 		print ("ALGORTIMO GAUSS")
 		dataset = pydicom.dcmread(self.filename)
-		Kernel.gauss(dataset.pixel_array)
+		new_image = Kernel.gauss(dataset.pixel_array)
+		self.show(dataset.pixel_array,new_image)
 
 	def otsu(self):
 		print ("ALGORTIMO OTSU")
 		dataset = pydicom.dcmread(self.filename)
-		#hist = Kernel.histogram(dataset.pixel_array)
-		#Thresholding.otsu(dataset.pixel_array, hist)
-		ret,thr = cv2.threshold(dataset.pixel_array, 0, 255, cv2.THRESH_OTSU)
-		plt.subplot(122),plt.imshow(ret,cmap=plt.cm.bone),plt.title('Convolucion')
-		plt.show()
+		hist = Kernel.histogram2(dataset.pixel_array)
+		new_image = Thresholding.otsu(dataset.pixel_array, hist)
+		self.show(dataset.pixel_array,new_image)
+		
 
 	def histogram(self):
 		print ("HISTOGRAMA")
 		dataset = pydicom.dcmread(self.filename)
 		Kernel.histogram(dataset.pixel_array)
 
+	def show(self,img,new_img):
+		
+		plt.subplot(121),plt.imshow(img,cmap=plt.cm.bone),plt.title('Original')
+		plt.xticks([]), plt.yticks([])
+		plt.subplot(122),plt.imshow(new_img,cmap=plt.cm.bone),plt.title('Convolucion')
+		plt.xticks([]), plt.yticks([])
+		plt.show()
 	
 	def __init__(self):
 		root = Tk()

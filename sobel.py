@@ -17,6 +17,7 @@ class Kernel:
 	def gauss(img):
 		matriz_convolucion = np.matrix("0, 1, 0; 1, -4, 1; 0, 1, 0")
 		new_img = convolucion.convolution(img,matriz_convolucion)
+		return new_img
 
 	def histogram(data):
 	    print()
@@ -45,5 +46,28 @@ class Kernel:
 	    plt.plot(histX,histY, 'k')
 	    plt.grid(True)
 	    plt.show()
+
+	def histogram2(data):
+	    
+	    print("Creating histogram please wait. (Paciencia)")
+	    
+	    min_pixel = np.ndarray.min(data)
+	    max_pixel = np.ndarray.max(data)
+	    print("Smallest Image Pixel Value.....",min_pixel)
+	    print("Largest Image Pixel Value.....",max_pixel)
+	    
+	    
+	    histY = [0]*65536
+	    histX = [0]*65536
+
+	    for i in range(0,len(data),1):
+	        for j in range(0,len(data),1):
+	            index = data[i][j]  
+	            histY[index] = histY[index]+1
+
+	    for i in range(0,len(histX),1):
+	        histX[i] = i
+
+	    return [histX,histY]
 
 #sobel = Sobel()

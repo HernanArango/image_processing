@@ -3,7 +3,7 @@ import cv2
 class Thresholding:
 
     #OTSU 
-    def otsu(hist):
+    def otsu(img):
         total_pixel = None
 
         q1 = None
@@ -28,6 +28,7 @@ class Thresholding:
         """
 
         Q = (q1 * q2) * (u1 - u2)^2
+
         thresh = Q
         maxValue = 255
 
