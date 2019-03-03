@@ -107,14 +107,14 @@ def convolution(img,matrix_convolution):
     #b,g,r = cv2.split (img)
     #new_img = convolucion([b,g,r],matriz_convolucion)
     new_img = aux_convolucion(img,matrix_convolution)
-
+    """
     # plot the image using matplotlib
     plt.subplot(121),plt.imshow(img,cmap=plt.cm.bone),plt.title('Original')
     plt.xticks([]), plt.yticks([])
     plt.subplot(122),plt.imshow(new_img,cmap=plt.cm.bone),plt.title('Convolucion')
     plt.xticks([]), plt.yticks([])
     plt.show()
-
+    """
     return new_img
     #save_image(new_img)
 

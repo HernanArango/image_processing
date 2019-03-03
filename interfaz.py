@@ -1,6 +1,6 @@
 from tkinter import *
 import pydicom
-from sobel import Kernel
+from kernel import Kernel
 from thresholding import Thresholding
 import cv2
 
@@ -11,6 +11,7 @@ class Interfaz:
 	def sobel(self):
 		print ("ALGORTIMO SOBEL")
 		dataset = pydicom.dcmread(self.filename)
+		kernel = Kernel()
 		Kernel.sobel(dataset.pixel_array)
 
 	def gauss(self):
@@ -18,14 +19,6 @@ class Interfaz:
 		dataset = pydicom.dcmread(self.filename)
 		Kernel.gauss(dataset.pixel_array)
 
-	def otsu(self):
-		print ("ALGORTIMO OTSU")
-		dataset = pydicom.dcmread(self.filename)
-		#hist = Kernel.histogram(dataset.pixel_array)
-		#Thresholding.otsu(dataset.pixel_array, hist)
-		ret,thr = cv2.threshold(dataset.pixel_array, 0, 255, cv2.THRESH_OTSU)
-		plt.subplot(122),plt.imshow(ret,cmap=plt.cm.bone),plt.title('Convolucion')
-		plt.show()
 
 	def histogram(self):
 		print ("HISTOGRAMA")
@@ -61,7 +54,6 @@ class Interfaz:
 		editmenu.add_command(label="Gauss",command=self.gauss)
 		editmenu.add_command(label="Sobel", command=self.sobel)
 		editmenu.add_command(label="Histograma", command=self.histogram)
-		editmenu.add_command(label="Otsu", command=self.otsu)
 
 		 
 		 
