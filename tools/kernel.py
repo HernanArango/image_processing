@@ -5,6 +5,7 @@ import numpy as np
 
 #OTSU 
 def otsu(hist):
+	hist = histogram(hist)
 	#trabajamos solo con los valores de Y (frecuencias)
 	hist = hist[1]
 	total_pixel = len(hist)
@@ -15,7 +16,68 @@ def otsu(hist):
 	u2 = 0
 	Q1 = 0
 	Q2 = 0
+	threshold = 0
+	
+	for i in range(0,total_pixel):
+		print(i)
+		#q(t) = sum p(i)
+		q1 += hist[i]
 
+		q2 = total_pixel - q1
+
+		q1 = int(q1 / total_pixel)
+		
+
+		if (q1 == 0):
+			continue
+
+		if (q2 == 0): 
+			break
+
+	
+		# i * P(i)  
+		u1 += (i * hist[i]) / q1
+		u2 += (i * hist[i]) / q2
+	
+		u1 = int(u1)
+		u2 = int(u2)
+
+
+		Q1 += int(hist[i]/u1)*(i - q1)^2
+		Q2 += int(hist[i]/u2)*(i - q2)^2
+	
+		Qw = (q1*Q1) + (q2*Q2)
+
+		print("q1",q1)
+		print("q2",q2)
+		print("u1",u1)
+		print("u2",u2)
+
+
+
+		print("u1",u1)
+		print("u2",u2)
+
+		Q = Qw + ((q1 * q2) * (u1 - u2)^2)
+
+		if (Q < Q_temp):
+			Q = Q_temp
+			threshold = i
+
+	return threshold
+
+def otsu_backup(hist):
+	#trabajamos solo con los valores de Y (frecuencias)
+	hist = hist[1]
+	total_pixel = len(hist)
+
+	q1 = 0
+	q2 = 0
+	u1 = 0
+	u2 = 0
+	Q1 = 0
+	Q2 = 0
+	
 	for i in range(0,total_pixel):
 	  #q(t) = sum p(i)
 	  q1 += hist[i]
@@ -65,7 +127,7 @@ def sobel(img):
 	
 	print("otsu")
 	hist = histogram(g.astype(int))
-	print(hist)
+	#print(hist)
 	#calculanting umbral
 	umbral = otsu(hist)
 

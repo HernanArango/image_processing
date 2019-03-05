@@ -79,6 +79,7 @@ class Interfaz:
 		editmenu.add_command(label="Gauss",command=self.gauss)
 		editmenu.add_command(label="Sobel", command=self.sobel)
 		editmenu.add_command(label="Histograma", command=self.histogram)
+		
 
 		 
 		 
