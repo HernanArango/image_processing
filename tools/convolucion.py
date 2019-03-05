@@ -82,6 +82,15 @@ def split_channels(img):
 
     return r,g,b
 
+def grayscale(img):
+    print(len(img))
+
+    red,green,blue = split_channels(img)
+    gray = (red * 0.299) + (green * 0.587) + (blue * 0.114)
+    # Set Pixel in new image
+    pixels[i, j] = (int(gray), int(gray), int(gray))
+    return pixels
+
 def save_image(new_img):
     cv2.imwrite( "nueva.png", new_img );
     plt.imshow(new_img,cmap=plt.cm.bone)
@@ -107,7 +116,7 @@ def convolution(img,matrix_convolution):
     #b,g,r = cv2.split (img)
     #new_img = convolucion([b,g,r],matriz_convolucion)
     new_img = aux_convolucion(img,matrix_convolution)
-
+    
     # plot the image using matplotlib
     """
     plt.subplot(121),plt.imshow(img,cmap=plt.cm.bone),plt.title('Original')
@@ -118,6 +127,3 @@ def convolution(img,matrix_convolution):
     """
     return new_img
     #save_image(new_img)
-
-
-

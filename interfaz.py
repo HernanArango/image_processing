@@ -1,8 +1,7 @@
 from tkinter import *
 import pydicom
 import matplotlib.pyplot as plt
-from sobel import Kernel
-from thresholding import Thresholding
+from tools.kernel import *
 import cv2
 
 class Interfaz:
@@ -11,29 +10,37 @@ class Interfaz:
 	
 
 	def sobel(self):
-		print ("ALGORTIMO SOBEL")
+		print ("ALGORITMO SOBEL")
 		dataset = pydicom.dcmread(self.filename)
-		new_image = Kernel.sobel(dataset.pixel_array)
+		new_image = sobel(dataset.pixel_array)
 		self.show(dataset.pixel_array,new_image)
+
 
 	def gauss(self):
-		print ("ALGORTIMO GAUSS")
+		print ("ALGORITMO GAUSS")
 		dataset = pydicom.dcmread(self.filename)
-		new_image = Kernel.gauss(dataset.pixel_array)
+		new_image = gauss(dataset.pixel_array)
 		self.show(dataset.pixel_array,new_image)
 
-	def otsu(self):
-		print ("ALGORTIMO OTSU")
-		dataset = pydicom.dcmread(self.filename)
-		hist = Kernel.histogram2(dataset.pixel_array)
-		new_image = Thresholding.otsu(dataset.pixel_array, hist)
-		self.show(dataset.pixel_array,new_image)
-		
 
 	def histogram(self):
 		print ("HISTOGRAMA")
 		dataset = pydicom.dcmread(self.filename)
-		Kernel.histogram(dataset.pixel_array)
+		hist = histogram(dataset.pixel_array)
+		histX = hist[0]
+		histY = hist[1]
+		plt.xlabel('Values')
+		plt.ylabel('Frecuency')
+		plt.title('Histogram')
+		plt.plot(histX,histY, 'k')
+		plt.grid(True)
+		plt.show()
+
+	def show_img(self):
+		dataset = pydicom.dcmread(self.filename)
+		img = grayscale(dataset.pixel_array)
+		plt.imshow(img,cmap=plt.cm.bone),plt.title('Original')
+		plt.show()
 
 	def show(self,img,new_img):
 		
@@ -68,10 +75,10 @@ class Interfaz:
 
 
 		editmenu = Menu(menubar, tearoff=0)
+		editmenu.add_command(label="Ver imagen",command=self.show_img)
 		editmenu.add_command(label="Gauss",command=self.gauss)
 		editmenu.add_command(label="Sobel", command=self.sobel)
 		editmenu.add_command(label="Histograma", command=self.histogram)
-		editmenu.add_command(label="Otsu", command=self.otsu)
 
 		 
 		 

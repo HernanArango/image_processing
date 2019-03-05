@@ -28,10 +28,12 @@ class Thresholding:
         """
 
         Q = (q1 * q2) * (u1 - u2)^2
+<<<<<<< HEAD
 
         thresh = Q
         maxValue = 255
+=======
+        
+>>>>>>> ff2960b81c905dc1967ba7235330a4b7478ad03e
 
-        th, dst = cv2.threshold(src, thresh, maxValue, cv2.THRESH_BINARY);
-
-        return th
+        return Q
