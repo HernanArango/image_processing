@@ -5,115 +5,55 @@ import numpy as np
 
 #OTSU 
 def otsu(hist):
-	hist = histogram(hist)
 	#trabajamos solo con los valores de Y (frecuencias)
 	hist = hist[1]
 	total_pixel = len(hist)
-
+	total_value = 0
+	print("total_pixel",total_pixel)
+	
 	q1 = 0
 	q2 = 0
 	u1 = 0
 	u2 = 0
-	Q1 = 0
-	Q2 = 0
+	w = 0
+	Q = 0
+	total_sum_pixel = 0
 	threshold = 0
-	
-	for i in range(0,total_pixel):
-		print(i)
-		#q(t) = sum p(i)
-		q1 += hist[i]
 
+	for i in range(0,total_pixel):
+		total_sum_pixel += hist[i] * i
+		total_value += hist[i]
+
+
+	for i in range(0,total_pixel):
+
+		
+		q1 += hist[i]
+		#q2 = total_value - q1
 		q2 = total_pixel - q1
 
-		q1 = int(q1 / total_pixel)
+		if (q1 == 0 or q2==0):
+			continue
 		
+		w += i * hist[i]
+		# u1 = sum (i*p(i))/q1(t)
+		u1 += w / q1
 
-		if (q1 == 0):
+		if (u1 == 0):
 			continue
 
-		if (q2 == 0): 
-			break
-
-	
-		# i * P(i)  
-		u1 += (i * hist[i]) / q1
-		u2 += (i * hist[i]) / q2
-	
-		u1 = int(u1)
-		u2 = int(u2)
+		u2 = (total_sum_pixel - w ) / q2
 
 
-		Q1 += int(hist[i]/u1)*(i - q1)^2
-		Q2 += int(hist[i]/u2)*(i - q2)^2
-	
-		Qw = (q1*Q1) + (q2*Q2)
-
-		print("q1",q1)
-		print("q2",q2)
-		print("u1",u1)
-		print("u2",u2)
-
-
-
-		print("u1",u1)
-		print("u2",u2)
-
-		Q = Qw + ((q1 * q2) * (u1 - u2)^2)
-
+		Q_temp = ((q1 * q2) * ((u1 - u2) * (u1 - u2)))
+		
 		if (Q < Q_temp):
 			Q = Q_temp
 			threshold = i
 
 	return threshold
 
-def otsu_backup(hist):
-	#trabajamos solo con los valores de Y (frecuencias)
-	hist = hist[1]
-	total_pixel = len(hist)
 
-	q1 = 0
-	q2 = 0
-	u1 = 0
-	u2 = 0
-	Q1 = 0
-	Q2 = 0
-	
-	for i in range(0,total_pixel):
-	  #q(t) = sum p(i)
-	  q1 += hist[i]
-
-	q2 = total_pixel - q1
-
-	q1 = int(q1 / total_pixel)
-	q2 = q2
-
-	for i in range(0,total_pixel):
-	  # i * P(i)  
-	  u1 += (i * hist[i]) / q1
-	  u2 += (i * hist[i]) / q2
-	
-	u1 = int(u1)
-	u2 = int(u2)
-
-	for i in range(0,total_pixel):
-	  Q1 += int(hist[i]/u1)*(i - q1)^2
-	  Q2 += int(hist[i]/u2)*(i - q2)^2
-	
-	Qw = (q1*Q1) + (q2*Q2)
-
-	print("q1",q1)
-	print("q2",q2)
-	print("u1",u1)
-	print("u2",u2)
-
-	
-
-	print("u1",u1)
-	print("u2",u2)
-
-	Q = Qw + ((q1 * q2) * (u1 - u2)^2)
-	
-	return Q
 
 def sobel(img):
 	#kernel
@@ -132,7 +72,7 @@ def sobel(img):
 	umbral = otsu(hist)
 
 	print("umbral",umbral)
-	umbral = 10000
+	#umbral = 10000
 	rows, cols = img.shape
 	#creating binary matrix
 	for i in range(0,rows):
@@ -153,12 +93,11 @@ def gauss(img):
 def histogram(data):
     
     print("Creating histogram please wait. (Paciencia)")
-    
     min_pixel = np.ndarray.min(data)
     max_pixel = int(np.ndarray.max(data))
     print("Smallest Image Pixel Value.....",min_pixel)
     print("Largest Image Pixel Value.....",max_pixel)
-    print (max_pixel+1)
+    
     
     histY = [0] * (max_pixel+1)
     histX = [0] * (max_pixel+1)
