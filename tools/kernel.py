@@ -86,8 +86,93 @@ def sobel(img):
 
 def gauss(img):
 	matriz_convolucion = np.matrix("0, 1, 0; 1, -4, 1; 0, 1, 0")
-	new_img = convolucion.convolution(img,matriz_convolucion)
+	new_img = convolution(img,matriz_convolucion)
 	return new_img
+
+def mediana(img):
+
+    rows, cols = img.shape
+    
+    new_matriz = np.zeros((rows, cols))   
+    
+    for i in range(1,rows-1):
+    	
+    	for j in range(1,cols-1):
+    		
+    		#print(i,j)
+    		#i,j es el elemento central
+    		a = img[i,j] 
+    		# i, j+1 derecha
+    		b = img[i,j+1] 
+    		# i, j-1 izquierda
+    		c = img[i,j-1] 
+    		# i-1, j, arriba
+    		d = img[i-1,j] 
+    		# i+1, j, Abajo
+    		e = img[i+1,j] 
+    		# i-1, j+1 diagonal derecha arriba
+    		f = img[i-1,j+1] 
+    		# i-1, j-1 diagonal izquierda arriba
+    		g = img[i-1,j-1] 
+    		# i+1, j+1 diagonal derecha abajo
+    		h = img[i+1,j+1] 
+    		# i+1, j-1 diagonal izquierda abajo 
+    		o = img[i+1,j-1] 
+    		window = np.array([a,b,c,d,e,f,g,h,o])
+    		
+    		new_matriz[i][j] = np.median(window)
+    		
+    		
+ 
+    return new_matriz
+
+#dilatacion
+def expansion(img):
+	#estructura en cruz
+	B = np.matrix('0 1 0; 1 1 1; 0 1 0')
+
+	rows, cols = img.shape
+	new_matriz = np.zeros((rows, cols))
+
+	for i in range(1,rows-1):
+
+		for j in range(1,cols-1):
+			
+
+			if img[i,j] != 0:
+
+				#print(i,j)
+				
+				# i, j+1 derecha
+				if img[i,j+1] == 0:
+					img[i,j+1] = img[i,j]
+				# i, j-1 izquierda
+				if img[i,j-1] == 0:
+					img[i,j-1] = img[i,j]
+				# i-1, j, arriba
+				if img[i-1,j] == 0:
+					img[i,j-1] = img[i,j]
+				# i+1, j, Abajo
+				if img[i+1,j] == 0:
+					img[i,j-1] = img[i,j]
+				# i-1, j+1 diagonal derecha arriba
+				if img[i-1,j+1] == 0:
+					img[i,j-1] = img[i,j]
+				# i-1, j-1 diagonal izquierda arriba
+				if img[i-1,j-1] == 0:
+					img[i,j-1] = img[i,j]
+				# i+1, j+1 diagonal derecha abajo
+				if img[i+1,j+1] == 0:
+					img[i,j-1] = img[i,j]
+				# i+1, j-1 diagonal izquierda abajo 
+				if img[i+1,j-1] == 0:
+					img[i,j-1] = img[i,j]
+		
+		
+		 
+	return img
+
+
 
 
 def histogram(data):

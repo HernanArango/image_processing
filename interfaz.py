@@ -1,32 +1,65 @@
+from tkinter import filedialog
 from tkinter import *
 import pydicom
 import matplotlib.pyplot as plt
 from tools.kernel import *
-import cv2
+import cv2 
 
 class Interfaz:
 	
 	filename = 'MRI_Images/MRI01.dcm'
 	
+	def open(self):
+		
+		self.filename = filedialog.askopenfilename(initialdir = "",title = "Select file",filetypes = (("dicom files","*.dcm"),("Jpg","*.jpg"),("Png","*.png"),("all files","*.*")))
+		print(self.filename)
+		self.typefile = (self.filename.split('/')[-1]).split(".")[-1]
+		
+		if self.typefile == "dcm":
+			dataset = pydicom.dcmread(self.filename)
+			self.image = dataset.pixel_array
+		else:
+			self.image = cv2.imread(self.filename)
+			
+	def execute(self,function):
+		
+		if self.typefile == "dcm":
+			return function(self.image)
+		else:
+			new_matriz = []
+			b,g,r = cv2.split (self.image)
+			chanels_image = [b,g,r]
+			for chanel in chanels_image:
+				new_matriz.append(function(chanel))
+
+			new_image = cv2.merge([new_matriz[0],new_matriz[1],new_matriz[2]])
+			cv2.imwrite("test.png", new_image)
+			return new_image
 
 	def sobel(self):
-		print ("ALGORITMO SOBEL")
-		dataset = pydicom.dcmread(self.filename)
-		new_image = sobel(dataset.pixel_array)
-		self.show(dataset.pixel_array,new_image)
+		print ("ALGORITMO SOBEL")	
+		new_image = self.execute(sobel)
+		self.show(self.image,new_image)
 
 
 	def gauss(self):
 		print ("ALGORITMO GAUSS")
-		dataset = pydicom.dcmread(self.filename)
-		new_image = gauss(dataset.pixel_array)
-		self.show(dataset.pixel_array,new_image)
+		new_image = self.execute(gauss)
+		self.show(self.image,new_image)
 
+	def mediana(self):
+		print ("ALGORITMO MEDIANA")
+		new_image = self.execute(mediana)
+		self.show(self.image,new_image)
+
+	def expansion(self):
+		print("Dilatacion")
+		new_image = self.execute(expansion)
+		self.show(self.image,new_image)
 
 	def histogram(self):
 		print ("HISTOGRAMA")
-		dataset = pydicom.dcmread(self.filename)
-		hist = histogram(dataset.pixel_array)
+		hist = histogram(self.image)
 		histX = hist[0]
 		histY = hist[1]
 		plt.xlabel('Values')
@@ -38,7 +71,7 @@ class Interfaz:
 
 	def show_img(self):
 		dataset = pydicom.dcmread(self.filename)
-		img = grayscale(dataset.pixel_array)
+		img =dataset.pixel_array
 		plt.imshow(img,cmap=plt.cm.bone),plt.title('Original')
 		plt.show()
 
@@ -57,7 +90,7 @@ class Interfaz:
 		root.config(menu=menubar)
 		 
 		filemenu = Menu(menubar, tearoff=0)
-		filemenu.add_command(label="Abrir")
+		filemenu.add_command(label="Abrir", command=self.open)
 		filemenu.add_separator()
 		filemenu.add_command(label="Salir", command=root.quit)
 
@@ -77,7 +110,9 @@ class Interfaz:
 		editmenu = Menu(menubar, tearoff=0)
 		editmenu.add_command(label="Ver imagen",command=self.show_img)
 		editmenu.add_command(label="Gauss",command=self.gauss)
+		editmenu.add_command(label="Mediana", command=self.mediana)
 		editmenu.add_command(label="Sobel", command=self.sobel)
+		editmenu.add_command(label="Dilatacion", command=self.expansion)
 		editmenu.add_command(label="Histograma", command=self.histogram)
 		
 
