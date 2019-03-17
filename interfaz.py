@@ -19,13 +19,14 @@ class Interfaz:
 			dataset = pydicom.dcmread(self.filename)
 			self.image = dataset.pixel_array
 		else:
-			self.image = cv2.imread(self.filename)
+			self.image = cv2.imread(self.filename,0)
 			
 	def execute(self,function):
 		
 		if self.typefile == "dcm":
 			return function(self.image)
 		else:
+			"""
 			new_matriz = []
 			b,g,r = cv2.split (self.image)
 			chanels_image = [b,g,r]
@@ -35,7 +36,12 @@ class Interfaz:
 			new_image = cv2.merge([new_matriz[0],new_matriz[1],new_matriz[2]])
 			cv2.imwrite("test.png", new_image)
 			return new_image
-
+			"""
+			#grayscale
+			new_matriz = []
+			new_image = function(self.image)
+			cv2.imwrite("test.png", new_image)
+			return new_image
 	def sobel(self):
 		print ("ALGORITMO SOBEL")	
 		new_image = self.execute(sobel)
@@ -55,6 +61,11 @@ class Interfaz:
 	def expansion(self):
 		print("Dilatacion")
 		new_image = self.execute(expansion)
+		self.show(self.image,new_image)
+
+	def kmeans(self):
+		print("KMEANS")
+		new_image = self.execute(kmeans)
 		self.show(self.image,new_image)
 
 	def histogram(self):
@@ -113,6 +124,7 @@ class Interfaz:
 		editmenu.add_command(label="Mediana", command=self.mediana)
 		editmenu.add_command(label="Sobel", command=self.sobel)
 		editmenu.add_command(label="Dilatacion", command=self.expansion)
+		editmenu.add_command(label="Kmeans", command=self.kmeans)
 		editmenu.add_command(label="Histograma", command=self.histogram)
 		
 

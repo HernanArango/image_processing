@@ -1,5 +1,6 @@
 from tools.convolucion import *
 import matplotlib.pyplot as plt
+import math
 import numpy as np
 
 
@@ -172,7 +173,84 @@ def expansion(img):
 		 
 	return img
 
+def kmeans(img):
 
+	rows, cols = img.shape
+	new_matriz = np.zeros((rows, cols))
+
+	centroides = [3000,5000,7000]
+
+	groups = [[],[],[]]
+	
+
+	#super for
+	w = 0
+	q = 0
+	while True: 
+		groups_tmp = [[],[],[]]
+		for i in range(0,rows):
+
+			for j in range(0,cols):
+				
+				minimo = abs(img[i][j] - centroides[0])
+				pos = 0
+				for x in range(1,len(centroides)):
+
+					calc = abs(img[i][j] - centroides[x])
+					
+					if calc < minimo:
+						pos = x
+						minimo = calc
+
+				groups_tmp[pos].append([i,j])
+
+
+		if w == 0 :
+			print ("w==0")
+			groups = groups_tmp
+			w = 1
+			centroides = recalculate_centroides(img,groups_tmp)
+
+		else:
+			print ("w!=0")
+			print ("recalculando centro",q)
+			#verify_centroides(groups,groups_tmp)
+			if np.array_equal(groups,groups_tmp):
+				return calculate_img_kmean(img,groups)
+			
+			q+=1
+			centroides = recalculate_centroides(img,groups_tmp)
+			groups = groups_tmp
+
+
+
+def calculate_img_kmean(img,centroides):
+	rows, cols = img.shape
+	new_matriz = np.zeros((rows, cols))
+	colores = [60,150,400]
+
+	for i in range(0,len(centroides)):
+		for valor in centroides[i]:
+			new_matriz[valor[0],valor[1]] = colores[i]
+
+	return new_matriz
+
+
+
+def recalculate_centroides(img,groups_tmp):
+	new_centroides = []
+	total = 0
+	cantidad = 0
+	print(len(groups_tmp[0]),len(groups_tmp[1]),len(groups_tmp[2]))
+	for group in groups_tmp:
+
+		for valor in group:
+			total += img[valor[0]][valor[1]]
+			cantidad += 1
+
+		new_centroides.append(math.floor(total/cantidad))
+
+	return new_centroides
 
 
 def histogram(data):
