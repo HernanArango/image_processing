@@ -173,21 +173,23 @@ def expansion(img):
 		 
 	return img
 
-def kmeans(img):
+def kmeans(img, k = 3):
 
 	rows, cols = img.shape
 	new_matriz = np.zeros((rows, cols))
 
 	centroides = [3000,5000,7000]
+	#centroides = calculate_centroides(img)
 
-	groups = [[],[],[]]
+	groups = [[]]*k
+
 	
-
-	#super for
 	w = 0
 	q = 0
 	while True: 
+		#no se puede hacer [[]]*k falla
 		groups_tmp = [[],[],[]]
+				
 		for i in range(0,rows):
 
 			for j in range(0,cols):
@@ -223,15 +225,21 @@ def kmeans(img):
 			groups = groups_tmp
 
 
+def calculate_centroides(img):
+	rows, cols = img.shape
+	cen1 = img[0][0]
+	cen2 = img[math.floor(rows/2)][math.floor(cols/2)]
+	cen3 = img[rows-1][cols-1]
+	return [cen1,cen2,cen3]
 
 def calculate_img_kmean(img,centroides):
 	rows, cols = img.shape
 	new_matriz = np.zeros((rows, cols))
-	colores = [60,150,400]
+	colores = [400,500,100]
 
 	for i in range(0,len(centroides)):
 		for valor in centroides[i]:
-			new_matriz[valor[0],valor[1]] = colores[i]
+			new_matriz[valor[0]][valor[1]] = colores[i]
 
 	return new_matriz
 
@@ -239,11 +247,11 @@ def calculate_img_kmean(img,centroides):
 
 def recalculate_centroides(img,groups_tmp):
 	new_centroides = []
-	total = 0
-	cantidad = 0
+	
 	print(len(groups_tmp[0]),len(groups_tmp[1]),len(groups_tmp[2]))
 	for group in groups_tmp:
-
+		total = 0
+		cantidad = 0
 		for valor in group:
 			total += img[valor[0]][valor[1]]
 			cantidad += 1

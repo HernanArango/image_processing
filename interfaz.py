@@ -19,29 +19,32 @@ class Interfaz:
 			dataset = pydicom.dcmread(self.filename)
 			self.image = dataset.pixel_array
 		else:
-			self.image = cv2.imread(self.filename,0)
+			self.image = cv2.imread(self.filename)
 			
-	def execute(self,function):
+	def execute(self,function,color = 1):
 		
 		if self.typefile == "dcm":
 			return function(self.image)
 		else:
-			"""
-			new_matriz = []
-			b,g,r = cv2.split (self.image)
-			chanels_image = [b,g,r]
-			for chanel in chanels_image:
-				new_matriz.append(function(chanel))
+			if color == 0:
+				#grayscale
+				new_matriz = []
+				img = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+				#cv2.imwrite("test.png", img)
+				new_image = function(img)
+				return new_image
+			else:
+				new_matriz = []
+				b,g,r = cv2.split (self.image)
+				chanels_image = [b,g,r]
+				for chanel in chanels_image:
+					new_matriz.append(function(chanel))
 
-			new_image = cv2.merge([new_matriz[0],new_matriz[1],new_matriz[2]])
-			cv2.imwrite("test.png", new_image)
-			return new_image
-			"""
-			#grayscale
-			new_matriz = []
-			new_image = function(self.image)
-			cv2.imwrite("test.png", new_image)
-			return new_image
+				new_image = cv2.merge([new_matriz[0],new_matriz[1],new_matriz[2]])
+				cv2.imwrite("test.png", new_image)
+				return new_image
+			
+			
 	def sobel(self):
 		print ("ALGORITMO SOBEL")	
 		new_image = self.execute(sobel)
@@ -65,7 +68,7 @@ class Interfaz:
 
 	def kmeans(self):
 		print("KMEANS")
-		new_image = self.execute(kmeans)
+		new_image = self.execute(kmeans,0)
 		self.show(self.image,new_image)
 
 	def histogram(self):
