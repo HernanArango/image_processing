@@ -1,7 +1,9 @@
 from tkinter import filedialog
 from tkinter import *
 import pydicom
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 from tools.kernel import *
 import cv2 
 
@@ -102,27 +104,49 @@ class Interfaz:
 	def show_img(self):
 		dataset = pydicom.dcmread(self.filename)
 		img =dataset.pixel_array
+		fig = Figure(figsize=(6,6))
+		plot=fig.add_subplot(111)
+		plot.imshow(img,cmap=plt.cm.bone),plt.title('Original')
+		self.canvas = FigureCanvasTkAgg(fig, master=self.root)
+		self.canvas.get_tk_widget().pack()
+		self.canvas.draw()
+		"""
 		plt.imshow(img,cmap=plt.cm.bone),plt.title('Original')
 		plt.show()
-
+		"""
 	def show(self,img,new_img):
+		fig = Figure(figsize=(6,6))
+		plt1=fig.add_subplot(121)
+		plt2=fig.add_subplot(122)
 		
+		plt1.imshow(img,cmap=plt.cm.bone),plt.title('Original')
+		plt.xticks([]), plt.yticks([])
+		plt2.imshow(new_img,cmap=plt.cm.bone),plt.title('Convolucion')
+		plt.xticks([]), plt.yticks([])
+		#plt.show()
+
+		self.canvas = FigureCanvasTkAgg(fig, master=self.root)
+		self.canvas.get_tk_widget().pack()
+		self.canvas.draw()
+		"""
 		plt.subplot(121),plt.imshow(img,cmap=plt.cm.bone),plt.title('Original')
 		plt.xticks([]), plt.yticks([])
 		plt.subplot(122),plt.imshow(new_img,cmap=plt.cm.bone),plt.title('Convolucion')
 		plt.xticks([]), plt.yticks([])
 		plt.show()
+		"""
 	
 	def __init__(self):
-		root = Tk()
+		self.root = Tk()
+		self.root.geometry("500x500")
 		 
-		menubar = Menu(root)
-		root.config(menu=menubar)
+		menubar = Menu(self.root)
+		self.root.config(menu=menubar)
 		 
 		filemenu = Menu(menubar, tearoff=0)
 		filemenu.add_command(label="Abrir", command=self.open)
 		filemenu.add_separator()
-		filemenu.add_command(label="Salir", command=root.quit)
+		filemenu.add_command(label="Salir", command=self.root.quit)
 
 
 		show_all = BooleanVar()
@@ -163,7 +187,7 @@ class Interfaz:
 		menubar.add_cascade(label="Ayuda", menu=helpmenu)
 
 
-		root.mainloop()
+		self.root.mainloop()
 
 
 Interfaz()
