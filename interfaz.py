@@ -53,22 +53,38 @@ class Interfaz:
 
 	def gauss(self):
 		print ("ALGORITMO GAUSS")
-		new_image = self.execute(gauss)
+		new_image = self.execute(gauss,0)
+		#new_image = cv2.GaussianBlur(self.image,(5,5),0)
+		self.show(self.image,new_image)
+
+	def raleight(self):
+		print ("ALGORITMO RALEIGHT")
+		new_image = self.execute(raleight,0)
 		self.show(self.image,new_image)
 
 	def mediana(self):
 		print ("ALGORITMO MEDIANA")
-		new_image = self.execute(mediana)
+		new_image = self.execute(mediana,0)
 		self.show(self.image,new_image)
 
 	def expansion(self):
 		print("Dilatacion")
-		new_image = self.execute(expansion)
-		self.show(self.image,new_image)
+		new_image = self.execute(expansion,0)
+		self.show(self.execute(otsu),new_image)
+
+	def erosion(self):
+		print("Erosion")
+		new_image = self.execute(erosion,0)
+		self.show(self.execute(otsu),new_image)
 
 	def kmeans(self):
 		print("KMEANS")
 		new_image = self.execute(kmeans,0)
+		self.show(self.image,new_image)
+
+	def otsu(self):
+		print("Otsu")
+		new_image = self.execute(otsu,0)
 		self.show(self.image,new_image)
 
 	def histogram(self):
@@ -124,11 +140,14 @@ class Interfaz:
 		editmenu = Menu(menubar, tearoff=0)
 		editmenu.add_command(label="Ver imagen",command=self.show_img)
 		editmenu.add_command(label="Gauss",command=self.gauss)
+		editmenu.add_command(label="Raleight",command=self.raleight)
 		editmenu.add_command(label="Mediana", command=self.mediana)
 		editmenu.add_command(label="Sobel", command=self.sobel)
 		editmenu.add_command(label="Dilatacion", command=self.expansion)
+		editmenu.add_command(label="Erosion", command=self.erosion)
 		editmenu.add_command(label="Kmeans", command=self.kmeans)
 		editmenu.add_command(label="Histograma", command=self.histogram)
+		editmenu.add_command(label="Otsu", command=self.otsu)
 		
 
 		 
