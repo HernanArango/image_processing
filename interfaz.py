@@ -26,6 +26,9 @@ class Interfaz:
 			self.image = dataset.pixel_array
 		else:
 			self.image = cv2.imread(self.filename)
+
+		self.old_image = self.image
+		self.show_img()
 			
 	def execute(self,function,color = 1,*options):
 
@@ -34,9 +37,9 @@ class Interfaz:
 		#progress.pack(fill=BOTH)
 		if self.typefile == "dcm":
 			if options:
-				return function(self.image,options)
+				self.image =function(self.image,options)
 			else:
-				return function(self.image)
+				self.image = function(self.image)
 		else:
 			if color == 0:
 				#grayscale
@@ -44,10 +47,10 @@ class Interfaz:
 				img = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 				#cv2.imwrite("test.png", img)
 				if options:
-					new_image = function(img,options)
+					self.image = function(img,options)
 				else:
-					new_image = function(img)
-				return new_image
+					self.image = function(img)
+				#return new_image
 			else:
 				new_matriz = []
 				b,g,r = cv2.split (self.image)
@@ -58,15 +61,28 @@ class Interfaz:
 					else:
 						new_matriz.append(function(chanel))
 
-				new_image = cv2.merge([new_matriz[0],new_matriz[1],new_matriz[2]])
-				cv2.imwrite("test.png", new_image)
-				return new_image
+				self.image = cv2.merge([new_matriz[0],new_matriz[1],new_matriz[2]])
+				cv2.imwrite("test.png", self.image)
+				#return new_image
 			
 			
 	def sobel(self):
 		print ("ALGORITMO SOBEL")	
-		new_image = self.execute(sobel)
-		self.show(self.image,new_image)
+		self.execute(sobel,0)
+		self.show(self.old_image,self.image)
+
+	def strategy(self):
+		print ("Estrategia")	
+		#5 iteration
+		self.execute(mediana)
+		self.execute(mediana)
+		self.execute(mediana)
+		self.execute(mediana)
+		self.execute(mediana)
+		#kmeans
+		self.execute(kmeans,0,5)
+
+		self.show(self.old_image,self.image)
 
 
 	def gauss(self):
@@ -75,9 +91,10 @@ class Interfaz:
 		parent=self.root)
 		sigma = simpledialog.askstring("", "Sigma",
 		parent=self.root)
-		new_image = self.execute(gauss,0,neighbours,sigma)
-		#new_image = cv2.GaussianBlur(self.image,(5,5),0)
-		self.show(self.image,new_image)
+		
+		self.execute(gauss,0,neighbours,sigma)
+		#self.new_image = cv2.GaussianBlur(self.image,(5,5),0)
+		self.show(self.old_image,self.image)
 
 	def raleight(self):
 		print ("ALGORITMO RALEIGHT")
@@ -85,35 +102,35 @@ class Interfaz:
 		parent=self.root)
 		sigma = simpledialog.askstring("", "Sigma",
 		parent=self.root)
-		new_image = self.execute(raleight,0,neighbours,sigma)
-		self.show(self.image,new_image)
+		self.execute(raleight,0,neighbours,sigma)
+		self.show(self.old_image,self.image)
 
 	def mediana(self):
 		print ("ALGORITMO MEDIANA")
-		new_image = self.execute(mediana,0)
-		self.show(self.image,new_image)
+		self.execute(mediana,0)
+		self.show(self.old_image,self.image)
 
 	def expansion(self):
 		print("Dilatacion")
-		new_image = self.execute(expansion,0)
-		self.show(self.execute(otsu),new_image)
+		self.execute(expansion,0)
+		self.show(self.old_image,self.image)
 
 	def erosion(self):
 		print("Erosion")
-		new_image = self.execute(erosion,0)
-		self.show(self.execute(otsu),new_image)
+		self.execute(erosion,0)
+		self.show(self.old_image,self.image)
 
 	def kmeans(self):
 		print("KMEANS")
 		centroides = simpledialog.askstring("", "Número de centroides",
 		parent=self.root)
-		new_image = self.execute(kmeans,0,centroides)
-		self.show(self.image,new_image)
+		self.execute(kmeans,0,centroides)
+		self.show(self.old_image,self.image)
 
 	def otsu(self):
 		print("Otsu")
-		new_image = self.execute(otsu,0)
-		self.show(self.image,new_image)
+		self.execute(otsu,0)
+		self.show(self.old_image,self.image)
 
 	def histogram(self):
 		print ("HISTOGRAMA")
@@ -137,6 +154,15 @@ class Interfaz:
 		self.canvas = FigureCanvasTkAgg(fig, master=self.root)
 		self.canvas.get_tk_widget().pack()
 		self.canvas.draw()
+	
+	def show_img2(self):
+		plt.subplot(121),plt.imshow(self.old_image,cmap=plt.cm.bone),plt.title('Original')
+		plt.xticks([]), plt.yticks([])
+		plt.subplot(122),plt.imshow(self.image,cmap=plt.cm.bone),plt.title('Modificada')
+		plt.xticks([]), plt.yticks([])
+		plt.show()
+
+		
 
 	def show(self,img,new_img):
 		if self.canvas != 0:
@@ -198,8 +224,9 @@ class Interfaz:
 		
 
 		view_menu = Menu(menubar)
-		view_menu.add_command(label="Ver imagen",command=self.show_img)
+		view_menu.add_command(label="Ver imagen",command=self.show_img2)
 		view_menu.add_command(label="Histograma", command=self.histogram)
+		view_menu.add_command(label="Estrategia propuesta", command=self.strategy)
 		view_menu.add_separator()
 		view_menu.add_checkbutton(label="Escala de grises", onvalue=1, offvalue=False, command= lambda :self.change_color(0),variable = self.grayscale)
 		view_menu.add_checkbutton(label="Color", onvalue=True, offvalue=0, command=lambda: self.change_color(1),variable = self.color)

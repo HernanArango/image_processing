@@ -359,7 +359,7 @@ def kmeans(img, k):
 	rows, cols = img.shape
 	new_matriz = np.zeros((rows, cols))
 
-	centroides = [3000,5000,7000]
+	centroides = [3000,5000,7000,2000,2500]
 	#centroides = calculate_centroides(img)
 
 	groups = [[]]*k
@@ -369,7 +369,7 @@ def kmeans(img, k):
 	q = 0
 	while True: 
 		#no se puede hacer [[]]*k falla
-		groups_tmp = [[],[],[]]
+		groups_tmp = [[],[],[],[],[]]
 				
 		for i in range(0,rows):
 
@@ -416,7 +416,7 @@ def calculate_centroides(img):
 def calculate_img_kmean(img,centroides):
 	rows, cols = img.shape
 	new_matriz = np.zeros((rows, cols))
-	colores = [400,500,100]
+	colores = [400,500,100,300,600]
 
 	for i in range(0,len(centroides)):
 		for valor in centroides[i]:
@@ -457,7 +457,7 @@ def histogram(data):
     for i in range(0,len(data),1):
     	#histX[i] = i
     	for j in range(0,len(data),1):
-            index = data[i][j]
+            index = int(data[i][j])
             histY[index] = histY[index]+1
     
     for i in range(0,len(histX),1):
@@ -472,3 +472,27 @@ def histogram(data):
     plt.show()
 	"""
     return [histX,histY]
+
+
+def strategy(img):
+	print(img.shape)
+
+	#image = cv2.GaussianBlur(img,(3,3),0)
+	#image = cv2.medianBlur(image,5)
+
+	"""
+	z = image.reshape((-1,3))              # reshape to a column vector
+	z = np.float32(img)
+	# define criteria, number of clusters(K) and apply kmeans()
+	criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+	K = 8
+	ret,label,center=cv2.kmeans(z,K,None,criteria,10,cv2.KMEANS_RANDOM_CENTERS)
+
+	# Now convert back into uint8, and make original image
+	center = np.uint8(center)
+	res = center[label.flatten()]
+	res2 = res.reshape((img.shape))
+	return res
+	"""
+	return image
+ 	
