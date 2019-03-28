@@ -17,8 +17,6 @@ import numpy as np
 from pydicom.data import get_testdata_files
 from heapq import merge
 import cv2
-import convolucion
-from sobel import Sobel
 
 #print(__doc__)
 
@@ -32,7 +30,7 @@ dataset = pydicom.dcmread(filename)
 
 matrix_convolution = np.matrix("0, 1, 0; 1, -4, 1; 0, 1, 0")
 #new_image = convolucion.convolution(dataset.pixel_array, matrix_convolution)
-Sobel(dataset.pixel_array)
+
 
 
 #----------GUARDAR DATOS----------

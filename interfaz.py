@@ -64,7 +64,11 @@ class Interfaz:
 				self.image = cv2.merge([new_matriz[0],new_matriz[1],new_matriz[2]])
 				cv2.imwrite("test.png", self.image)
 				#return new_image
-			
+	
+	def restablecer(self):
+		print ("restablecer")	
+		self.image = self.old_image
+		self.show_img()
 			
 	def sobel(self):
 		print ("ALGORITMO SOBEL")	
@@ -226,6 +230,7 @@ class Interfaz:
 		view_menu = Menu(menubar)
 		view_menu.add_command(label="Ver imagen",command=self.show_img2)
 		view_menu.add_command(label="Histograma", command=self.histogram)
+		view_menu.add_command(label="Restablecer Imágen Original", command=self.restablecer)
 		view_menu.add_command(label="Estrategia propuesta", command=self.strategy)
 		view_menu.add_separator()
 		view_menu.add_checkbutton(label="Escala de grises", onvalue=1, offvalue=False, command= lambda :self.change_color(0),variable = self.grayscale)
